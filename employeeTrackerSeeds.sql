@@ -13,6 +13,8 @@ CREATE TABLE employee (
   PRIMARY KEY (id)
 );
 
+INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('Gary', 'Miller', 1, 1);
+
 CREATE TABLE department (
   id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(30) NOT NULL,
