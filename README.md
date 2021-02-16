@@ -22,51 +22,40 @@ In this project, I have created a command-line application
 2. Install npm inquirer package by typing:
     >npm init -y ; npm install inquirer
 3. Install npm mysql package: >npm insall mysql
-4. Make sure that the following files exist in your application folder:
+4. Install npm console.table package: >npm insall console.table --save
+5. Make sure that the following files exist in your application folder:
     >start.js
     >.gitignore
-5. The .gitignore file should contain the following lines:
+6. The .gitignore file should contain the following lines:
     >node_modules/
     >.DS_Store/
 
 ## Usage
 
-To run this app, open the console in the directory where the index.js file is and run the following command:
+To run this app, open the console in the directory where the start.js file is and run the following command:
 >node start
 
-You will receive prompts for the following:
+You will select from a menu list as follows:
 
-1. Project Title - required
-2. Project Description - required
-3. Installation Instructions - optional
-4. Usage Information - optional
-5. License - required; choose from a list
-6. Contribution Guidelines - optional
-7. Test Instructions - optional
-8. GitHub Username - optional
-9. Email Address - required and validated for correct format
-
-A README.md file will be created in the main directory of the application.
+* View all employees
+* View all employees by department
+* View all employees by manager"
+* Add an employee
+* Remove an employee
+* Update employee role
+* Update employee manager
 
 ![Demo GIF](./images/ReadMeGeneratorWalkthrough.gif)
 
 ## Screenshots
 
-### Enter Project Title, Project Description, Installation Instructions, and License
+### Menu Items
 
-![Enter ReadMe File Data](./images/enter-data.PNG)
+![Menu Items](./images/enter-data.PNG)
 
-### License List Prompt
+### View All Employees
 
-![Choose License from List](./images/license-prompt.PNG)
-
-### Invalid Email Message
-
-![Invalid Email Message](./images/invalid-email.PNG)
-
-### File Was Successfully Create
-
-![File Was Successfully Created](./images/file-created.PNG)
+![View All Employees](./images/license-prompt.PNG)
 
 ## License
 

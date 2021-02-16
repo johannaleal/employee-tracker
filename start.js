@@ -1,19 +1,14 @@
+// DEPENDENCIES
 const inquirer = require('inquirer');
-
 const mysql = require('mysql');
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
   host: 'localhost',
-
-  // Your port; if not 3306
   port: 3306,
-
-  // Your username
   user: 'root',
-
-  // Be sure to update with your own MySQL password!
   password: 'Trilogy2021',
-  database: 'employeeTrackerB',
+  database: 'employeeTrackerDB',
 });
 
 //require ("employeeTrackerCRUD.js");
@@ -44,9 +39,11 @@ const menu = [
 ]
 
 const processUserSelection = (actionSelected) => {
+    console.log(actionSelected);
+
 
     switch (actionSelected) {
-        case "View all employees":
+        case "View all employees": viewAllEmployees();
             break;
         case "View all employees by department":
             break;
@@ -63,12 +60,12 @@ const processUserSelection = (actionSelected) => {
 
 }
 
-const readEmployees = () => {
+const viewAllEmployees = () => {
     console.log('Selecting all employees...\n');
-    connection.query('SELECT * FROM employees', (err, res) => {
+    connection.query('select e.id, first_name, last_name, title, d.name AS department from employee as e INNER JOIN role as r ON e.role_id = r.id INNER JOIN department AS d ON r.department_id = d.id', (err, res) => {
       if (err) throw err;
       // Log all results of the SELECT statement
-      console.log(res);
+      console.table(res);
       connection.end();
     });
   };
@@ -80,7 +77,7 @@ inquirer
   .prompt(menu)
   // Write a ReadMe file using the amswers to the prompts.
   .then(userResponse => {
-    processUserSelection(userResponse);
+    processUserSelection(userResponse.menuItemSelection);
   })
   // If there is an error, write an error to the console.
   .catch(err => {
