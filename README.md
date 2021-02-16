@@ -4,9 +4,7 @@
 
 ## Description
 
-In this project, I have created a command-line application to generate a README file. The application will dynamically generate a professional ReadMe.md file from a user’s input using the Inquirer package. The user will be presented with various prompts whose data will be used to populate the sections of the ReadMe file. Some of these sections will be validated including the project title, project description, and email address.
-
-There is a sample output file called README_test.md in the directory.
+In this project, I have created a command-line application
 
 ## Table of Contents
 
@@ -23,10 +21,9 @@ There is a sample output file called README_test.md in the directory.
 1. Install node.js. It can be downloaded here: [node.js Downloads](https://nodejs.org/en/download/)
 2. Install npm inquirer package by typing:
     >npm init -y ; npm install inquirer
-3. Install inquirer email-validator package by typing:
-    >npm install email-validator
+3. Install npm mysql package: >npm insall mysql
 4. Make sure that the following files exist in your application folder:
-    >index.js
+    >start.js
     >.gitignore
 5. The .gitignore file should contain the following lines:
     >node_modules/
@@ -35,7 +32,7 @@ There is a sample output file called README_test.md in the directory.
 ## Usage
 
 To run this app, open the console in the directory where the index.js file is and run the following command:
->node index.js
+>node start
 
 You will receive prompts for the following:
 
