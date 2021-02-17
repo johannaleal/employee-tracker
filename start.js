@@ -1,15 +1,8 @@
 // DEPENDENCIES
 const inquirer = require('inquirer');
-const mysql = require('mysql');
-const cTable = require('console.table');
+const connection = require("./connection.js");
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: 'Trilogy2021',
-  database: 'employeeTrackerDB',
-});
+let banner = require('simple-banner');
 
 //require ("employeeTrackerCRUD.js");
 
@@ -33,14 +26,18 @@ const menu = [
                 "Add an employee",
                 "Remove an employee",
                 "Update employee role",
-                "Update employee manager"
+                "Update employee manager",
+                "Add department",
+                "Add role",
+                "View departments",
+                "View roles",
+                "Exit"
             ]
     }
 ]
 
 const processUserSelection = (actionSelected) => {
     console.log(actionSelected);
-
 
     switch (actionSelected) {
         case "View all employees": viewAllEmployees();
@@ -55,22 +52,51 @@ const processUserSelection = (actionSelected) => {
             break;
         case "Update employee manager":
             break;
-            
+        case "Add department":
+            break;
+        case "Addd role":
+            break;
+        case "View departments":
+            viewAllDepartments();
+            break;
+        case "View roles":
+            break;
+        case "Exit":
+          console.end();
+          break;
     }
 
 }
 
 const viewAllEmployees = () => {
     console.log('Selecting all employees...\n');
-    connection.query('select e.id, first_name, last_name, title, d.name AS department from employee as e INNER JOIN role as r ON e.role_id = r.id INNER JOIN department AS d ON r.department_id = d.id', (err, res) => {
+
+    // Build SQL SELECT statement to get all employees ordered by last_name, first_name.
+    const query = "SELECT e.id, e.first_name, e.last_name, title, d.name AS department, IFNULL(CONCAT(m.first_name,' ', m.last_name), 'None') AS maanager FROM employee AS e INNER JOIN role AS r ON e.role_id = r.id INNER JOIN department AS d ON r.department_id = d.id LEFT JOIN employee AS m ON e.manager_id = m.id ORDER BY e.last_name, e.first_name";
+
+    connection.query(query, (err, res) => {
       if (err) throw err;
-      // Log all results of the SELECT statement
+      // Log all results of the SELECT statement.
       console.table(res);
       connection.end();
     });
   };
+  
+  const viewAllDepartments = () => {
+    console.log('Selecting all departments...\n');
 
+    // Build SQL SELECT statement to get all employees ordered by last_name, first_name.
+    const query = "SELECT id, name AS department FROM department ORDER BY name";
+
+    connection.query(query, (err, res) => {
+      if (err) throw err;
+      // Log all results of the SELECT statement.
+      console.table(res);
+      connection.end();
+    });
+  };
 // USER INTERACTIONS ==========================
+banner.set("EMPLOYEE TRACKER");
 
 // Prompt the user to get answers to questions.
 inquirer
