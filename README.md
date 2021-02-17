@@ -24,11 +24,18 @@ In this project, I have created a command-line application
 3. Install npm mysql package: >npm insall mysql
 4. Install npm console.table package: >npm insall console.table --save
 5. Make sure that the following files exist in your application folder:
-    >start.js
-    >.gitignore
+
+```
+start.js
+.gitignore
+```
+
 6. The .gitignore file should contain the following lines:
-    >node_modules/
-    >.DS_Store/
+
+```
+node_modules/
+.DS_Store/
+```
 
 ## Usage
 
