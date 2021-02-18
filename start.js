@@ -20,15 +20,15 @@ const menu = [
         choices: [
                 "View All Employees",
                 "View all Employees by Manager",
+                "View All Departments",
+                "View All Roles",
                 "Add an Employee",
+                "Add a Department",
+                "Add a Role",
                 "Update Employee Role",
                 "Update Employee Manager",
                 "Remove an Employee",
-                "View All Departments",
-                "Add a Department",
                 "Remove a Department",
-                "View All Roles",
-                "Add a Role",
                 "Remove a Role", 
                 "View Total Utilized Budget of a Department",
                 "Exit Application",
@@ -174,13 +174,16 @@ const addEmployee = () => {
         console.log(chosenRole);
 
         // Find the chosen manager object by matching first name and last name in order to get the id.
+        // Only do this if one was chosen.
         let chosenMgr;
 
-        mgrResults.forEach((manager) => {
-            if ((manager.name === answer.manager)) {
-                chosenMgr = manager;
-            };
-        });
+        if (answer.manager != "None") {
+            mgrResults.forEach((manager) => {
+                if ((manager.name === answer.manager)) {
+                    chosenMgr = manager;
+                };
+            });
+        };
 
         console.log(chosenMgr);
         // when finished prompting, insert a new item into the db with that info
@@ -318,17 +321,17 @@ const processUserSelection = (actionSelected) => {
             break;
         case "Add an Employee": addEmployee();
             break;
-        case "Remove an Employee": addEmployee();
+        case "Add a Department": addDepartment();
+            break;
+        case "Add a Role": addRole();
             break;
         case "Update Employee Role":
             break;
         case "Update Employee Manager":
             break;
-        case "Add a Department": addDepartment();
-            break;
+        case "Remove an Employee":
+                break;
         case "Remove a Department":
-            break;
-        case "Add a Role": addRole();
             break;
         case "Remove a Role":
             break;
