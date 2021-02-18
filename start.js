@@ -168,20 +168,20 @@ const addEmployee = () => {
 
         roleResults.forEach((role) => {
             if (role.title === answer.title) {
-                chosenRole = role;
+                chosenRole = role.id;
             }
         });
         console.log(chosenRole);
 
         // Find the chosen manager object by matching first name and last name in order to get the id.
         // Only do this if one was chosen.
-        let chosenMgr;
+        let chosenMgr = null;
 
         if (answer.manager != "None") {
             mgrResults.forEach((manager) => {
                 if ((manager.name === answer.manager)) {
-                    chosenMgr = manager;
-                };
+                    chosenMgr = manager.id;
+                }
             });
         };
 
@@ -192,8 +192,8 @@ const addEmployee = () => {
             {
                 last_name: answer.last_name,
                 first_name: answer.first_name,
-                role_id: chosenRole.id,
-                manager_id: chosenMgr.id,
+                role_id: chosenRole,
+                manager_id: chosenMgr,
             },
             (err) => {
                 if (err) throw err;
