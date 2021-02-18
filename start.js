@@ -163,8 +163,6 @@ const addEmployee = () => {
 
     ])
     .then((answer) => {
-        console.log(answer);
-
         // Find the chosen role object in order to get the id.
         let chosenRole;
 
@@ -236,6 +234,76 @@ const addDepartment = () => {
     });
 };
 
+const addRole = () => {
+    // Get all the departments and store in an array to be used in 
+    // the department inquirer list.
+    let query = "SELECT * FROM department ORDER BY name";
+    let deptResults;
+    const departments = [];
+  
+    connection.query(query, (err, results) => {
+        if (err) throw err;
+
+        deptResults = results;
+
+        // Store each title in the array.
+        results.forEach(({name}) => {
+            departments.push(name);
+        });
+    });
+
+    inquirer
+        // Prompt for the role information.
+        .prompt([
+        {
+            name: "title",
+            type: "input",
+            message: "What is the role's title?",
+            validate: confirmResponse,
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "What is the role's salary?.",
+            validate: confirmResponse,
+        },
+        {
+            name: "department",
+            type: "list",
+            choices: departments,
+            message: "Select the role's department.",
+        },
+    ])
+    .then((answer) => {
+        // When finished prompting, insert a new item into the db with that info.
+        let chosenDept;
+
+        deptResults.forEach((department) => {
+            if (department.name === answer.department) {
+                chosenDept = department;
+            }
+        });
+        console.log(chosenDept);
+
+        connection.query(
+            'INSERT INTO role SET ?',
+            {
+                title: answer.title,
+                salary: answer.salary,
+                department_id: chosenDept.id,
+            },
+            (err) => {
+                if (err) throw err;
+
+                console.log('\nThe role was created successfully!\n');
+                
+                 // Display the main menu.
+                displayMenu();
+            }
+        );
+    });
+};
+
 const processUserSelection = (actionSelected) => {
     console.log(actionSelected);
 
@@ -260,7 +328,7 @@ const processUserSelection = (actionSelected) => {
             break;
         case "Remove a Department":
             break;
-        case "Add a Role":
+        case "Add a Role": addRole();
             break;
         case "Remove a Role":
             break;
