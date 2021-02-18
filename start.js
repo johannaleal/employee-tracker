@@ -25,11 +25,11 @@ const menu = [
                 "Update Employee Manager",
                 "Remove an Employee",
                 "View All Departments",
-                "Add Department",
-                "Remove Department", 
+                "Add a Department",
+                "Remove a Department",
                 "View All Roles",
-                "Add Role",
-                "Remove Role", 
+                "Add a Role",
+                "Remove a Role", 
                 "View Total Utilized Budget of a Department",
                 "Exit Application",
                 ]
@@ -222,7 +222,7 @@ const addDepartment = () => {
         connection.query(
             'INSERT INTO department SET ?',
             {
-                name: department,
+                name: answer.department,
             },
             (err) => {
                 if (err) throw err;
@@ -256,13 +256,13 @@ const processUserSelection = (actionSelected) => {
             break;
         case "Update Employee Manager":
             break;
-        case "Add Department":
+        case "Add a Department": addDepartment();
             break;
-        case "Remove Department":
+        case "Remove a Department":
             break;
-        case "Addd Role":
+        case "Add a Role":
             break;
-        case "Remove Role":
+        case "Remove a Role":
             break;
         case "View Total Utilized Budget of a Department":
             break;
