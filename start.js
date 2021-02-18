@@ -1,13 +1,6 @@
 // DEPENDENCIES
 const inquirer = require("inquirer");
 const connection = require("./connection.js");
-
-// const viewAllEmployees = require("./lib/viewAllEmployees.js");
-// const viewEmployeesByManager = require("./lib/viewEmployeesByManager.js");
-// const addEmployee = require("./lib/addEmployee.js");
-// const viewAllDepartments = require("./lib/viewAllDepartments.js");
-// const viewAllRoles = require("./lib/viewAllRoles.js");
-
 const figlet = require("figlet");
 
 // Main menu array to be used for inquirer prompts
@@ -35,6 +28,16 @@ const menu = [
                 ]
       }
 ];
+
+function getRoles() {
+    const query = "SELECT * FROM roles ORDER BY title ASC";
+    
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        
+        return res;
+    });
+}
 
 // Validate required input.
 const confirmResponse = (input) => {
@@ -103,7 +106,7 @@ const addEmployee = () => {
     // the role inquirer list.
     let query = "SELECT id, title FROM role ORDER BY title";
     let roleResults;
-    const roles = [];
+    let roles = [];
   
     connection.query(query, (err, results) => {
         if (err) throw err;
@@ -120,7 +123,7 @@ const addEmployee = () => {
     // the manager inquirer list.
     query = "SELECT id, CONCAT(last_name, ', ', first_name) AS name FROM employee ORDER BY last_name, first_name";
     let mgrResults;
-    const managers = ["None"];
+    let managers = ["None"];
   
     connection.query(query, (err, results) => {
         if (err) throw err;
@@ -242,7 +245,7 @@ const addRole = () => {
     // the department inquirer list.
     let query = "SELECT * FROM department ORDER BY name";
     let deptResults;
-    const departments = [];
+    let departments = [];
   
     connection.query(query, (err, results) => {
         if (err) throw err;
@@ -254,6 +257,7 @@ const addRole = () => {
             departments.push(name);
         });
     });
+    console.log(departments.length);
 
     inquirer
         // Prompt for the role information.
@@ -267,7 +271,7 @@ const addRole = () => {
         {
             name: "salary",
             type: "input",
-            message: "What is the role's salary?.",
+            message: "What is the role's salary?",
             validate: confirmResponse,
         },
         {
@@ -307,6 +311,152 @@ const addRole = () => {
     });
 };
 
+const updateEmployeeRole = () => {
+     // Get all the roles and store in an array to be used in 
+    // the role inquirer list.
+    let query = "SELECT id, title FROM role ORDER BY title";
+    let roleResults;
+    let roles = [];
+  
+    connection.query(query, (err, results) => {
+        if (err) throw err;
+
+        roleResults = results;
+
+        // Store each title in the array.
+        results.forEach(({title}) => {
+            roles.push(title);
+        });
+    });
+
+    // Get all the employees and store in an array to be used in 
+    // the manager inquirer list.
+    query = "SELECT id, CONCAT(last_name, ', ', first_name) AS name FROM employee ORDER BY last_name, first_name";
+    let employeeResults;
+    let employees = [];
+  
+    connection.query(query, (err, results) => {
+        if (err) throw err;
+
+        employeeResults = results;
+
+        // Store each employee name in the array.
+        results.forEach(({name}) => {
+            employees.push(name);
+        });
+    });
+
+    inquirer
+        // Prompt for employee information. Validate for required fields.
+        .prompt([
+        {
+            name: "verify",
+            type: "input",
+            message: "Press ENTER to continue.",
+        },
+        {
+            name: "employee",
+            type: "list",
+            choices: employees,
+            message: "Select the employee whose role you want to change.",
+        },
+        {
+            name: "title",
+            type: "list",
+            choices: roles,
+            message: "Select the employee's new title.",
+        },
+    ])
+    .then((answer) => {
+        // Find the chosen role object in order to get the id.
+        let chosenRole;
+
+        roleResults.forEach((role) => {
+            if (role.title === answer.title) {
+                chosenRole = role.id;
+            }
+        });
+
+        // Find the chosen manager object by matching first name and last name in order to get the id.
+        // Only do this if one was chosen.
+        let chosenEmployee = null;
+
+        employeeResults.forEach((employee) => {
+            if ((employee.name === answer.employee)) {
+                chosenEmployee = employee.id;
+            }
+        });
+
+        // when finished prompting, insert a new item into the db with that info
+        connection.query(
+            'UPDATE employee SET ? WHERE ?',
+            [
+                { role_id: chosenRole, },
+                { id: chosenEmployee, }
+            ],
+            (err) => {
+                if (err) throw err;
+
+                console.log("\nThe employee's role was successfully!\n");
+                
+                 // Display the main menu.
+                displayMenu();
+            }
+        );
+    });
+
+};
+
+const removeDepartment = () => {
+    let query = "SELECT id, name FROM department ORDER BY name";
+    let deptResults;
+    let depts = [];
+  
+    connection.query(query, (err, results) => {
+        if (err) throw err;
+
+        // Store each title in the array.
+        results.forEach(({name}) => {
+            depts.push(name);
+        });
+    });
+
+    inquirer
+        // Prompt for the department name.
+        .prompt([
+        {
+            name: "department",
+            type: "list",
+            choices: depts,
+            message: "Which department do you want to delete?",
+        },
+    ])
+    .then((answer) => {
+        let chosenDept;
+
+        results.forEach((department) => {
+            if (department.name === answer.department) {
+                chosenDept = department.id;
+            }
+        });
+
+        connection.query(
+            'DELETE FROM department WHERE ?',
+            {
+                id: chosenDept,
+            },
+            (err) => {
+                if (err) throw err;
+
+                console.log('\nThe department was removed successfully!\n');
+                
+                 // Display the main menu.
+                displayMenu();
+            }
+        );
+    });
+};
+
 const processUserSelection = (actionSelected) => {
     console.log(actionSelected);
 
@@ -315,7 +465,8 @@ const processUserSelection = (actionSelected) => {
             break;
         case "View All Employees by Manager": viewEmployeesByManager();
             break;
-        case "View All Departments": viewAllDepartments();
+        case "View All Departments":
+            viewAllDepartments();
             break;
         case "View All Roles": viewAllRoles();
             break;
@@ -325,13 +476,13 @@ const processUserSelection = (actionSelected) => {
             break;
         case "Add a Role": addRole();
             break;
-        case "Update Employee Role":
+        case "Update Employee Role": updateEmployeeRole();
             break;
         case "Update Employee Manager":
             break;
         case "Remove an Employee":
-                break;
-        case "Remove a Department":
+            break;
+        case "Remove a Department": removeDepartment();
             break;
         case "Remove a Role":
             break;
@@ -341,7 +492,11 @@ const processUserSelection = (actionSelected) => {
             console.log("\n\nExiting application...\n");
             connection.end();
           break;
-    }
+    };
+
+    // if (actionSelected != "Exit Application") {
+    //     displayMenu();
+    // };
 };
     
 // Display the menu and prompt user for menu selection.
