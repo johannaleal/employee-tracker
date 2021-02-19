@@ -393,7 +393,81 @@ const updateEmployeeRole = () => {
             }
         );
     });
+};
 
+const updateEmployeeManager = () => {
+    // Get all the employees and store in an array to be used in 
+   // the manager inquirer list.
+   query = "SELECT id, CONCAT(last_name, ', ', first_name) AS name FROM employee ORDER BY last_name, first_name";
+ 
+   connection.query(query, (err, results) => {
+        if (err) throw err;
+
+        let employees = [];
+
+        // Store each employee name in the array.
+        results.forEach(({name}) => {
+            employees.push(name);
+        });
+
+        inquirer
+            // Prompt for employee information. Validate for required fields.
+            .prompt([
+            // {
+            //     name: "verify",
+            //     type: "input",
+            //     message: "Press ENTER to continue.",
+            // },
+            {
+                name: "employee",
+                type: "list",
+                choices: employees,
+                message: "Select the employee whose manager you want to change.",
+            },
+            {
+                name: "manager",
+                type: "list",
+                choices: employees,
+                message: "Select the employee's new manager.",
+            },
+        ])
+        .then((answer) => {
+            // Find the chosen manager object by matching first name and last name in order to get the id.
+            // Only do this if one was chosen.
+            let chosenEmployee;
+
+            results.forEach((employee) => {
+                if ((employee.name === answer.employee)) {
+                    chosenEmployee = employee.id;
+                }
+            });
+
+            let chosenManager;
+
+            results.forEach((employee) => {
+                if ((employee.name === answer.manager)) {
+                    chosenManager = employee.id;
+                }
+            });
+
+            // when finished prompting, insert a new item into the db with that info
+            connection.query(
+                'UPDATE employee SET ? WHERE ?',
+                [
+                    { manager_id: chosenManager, },
+                    { id: chosenEmployee, }
+                ],
+                (err) => {
+                    if (err) throw err;
+
+                    console.log("\nThe employee's manager was successfully!\n");
+                    
+                        // Display the main menu.
+                    displayMenu();
+                }
+            );
+        });
+    });
 };
 
 const removeEmployee = () => {
@@ -566,7 +640,7 @@ const processUserSelection = (actionSelected) => {
             break;
         case "Update Employee Role": updateEmployeeRole();
             break;
-        case "Update Employee Manager":
+        case "Update Employee Manager": updateEmployeeManager();
             break;
         case "Remove an Employee": removeEmployee();
             break;
