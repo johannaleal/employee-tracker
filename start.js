@@ -71,6 +71,23 @@ const viewEmployeesByManager = () => {
     });
 };
 
+const viewTotalUtilizedBudget = () => {
+    console.log('\nGenerating your report...\n');
+    
+    // Build SQL SELECT statement to get all employees ordered by last_name, first_name.
+    const query = "SELECT d.name AS department, CONCAT('$', FORMAT(SUM(salary), 2)) AS total_budget FROM employee e INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id GROUP BY d.name ORDER BY d.name";
+    
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        // Log all results of the SELECT statement.
+        console.table(res);
+
+        // Display the main menu.
+        console.log("\n");
+        displayMenu();
+    });
+};
+
 const viewAllDepartments = () => {
     console.log("\nSelecting all departments...\n");
   
@@ -662,7 +679,7 @@ const processUserSelection = (actionSelected) => {
             break;
         case "Remove a Role": removeRole();;
             break;
-        case "View Total Utilized Budget of a Department":
+        case "View Total Utilized Budget of a Department": viewTotalUtilizedBudget();
             break;
         case "Exit Application":
             console.log("\n\nExiting application...\n");
