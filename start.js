@@ -413,7 +413,6 @@ const removeDepartment = () => {
     connection.query(query, (err, results) => {
         if (err) throw err;
 
-        let deptResults;
         let depts = [];
 
         // Store each title in the array.
@@ -459,6 +458,56 @@ const removeDepartment = () => {
     });
 };
 
+const removeRole = () => {
+    let query = "SELECT id, title FROM role ORDER BY title";
+  
+    connection.query(query, (err, results) => {
+        if (err) throw err;
+
+        let roles = [];
+
+        // Store each title in the array.
+        results.forEach(({title}) => {
+            roles.push(title);
+        });
+    
+        inquirer
+            // Prompt for the title name.
+            .prompt([
+            {
+                name: "title",
+                type: "list",
+                choices: roles,
+                message: "Which title do you want to delete?",
+            },
+        ])
+        .then((answer) => {
+            let chosenRole;
+
+            results.forEach((role) => {
+                if (role.title === answer.title) {
+                    chosenRole = role.id;
+                }
+            });
+
+            connection.query(
+                'DELETE FROM role WHERE ?',
+                {
+                    id: chosenRole,
+                },
+                (err) => {
+                    if (err) throw err;
+
+                    console.log('\nThe title was removed successfully!\n');
+                    
+                    // Display the main menu.
+                    displayMenu();
+                }
+            );
+        });
+    });
+};
+
 const processUserSelection = (actionSelected) => {
     console.log(actionSelected);
 
@@ -467,8 +516,7 @@ const processUserSelection = (actionSelected) => {
             break;
         case "View All Employees by Manager": viewEmployeesByManager();
             break;
-        case "View All Departments":
-            viewAllDepartments();
+        case "View All Departments": viewAllDepartments();
             break;
         case "View All Roles": viewAllRoles();
             break;
@@ -486,7 +534,7 @@ const processUserSelection = (actionSelected) => {
             break;
         case "Remove a Department": removeDepartment();
             break;
-        case "Remove a Role":
+        case "Remove a Role": removeRole();;
             break;
         case "View Total Utilized Budget of a Department":
             break;
