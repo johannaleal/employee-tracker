@@ -12,7 +12,7 @@ const menu = [
         message: "What would you like to do?",
         choices: [
                 "View All Employees",
-                "View all Employees by Manager",
+                "View All Employees by Manager",
                 "View All Departments",
                 "View All Roles",
                 "Add an Employee",
@@ -47,7 +47,23 @@ const viewAllEmployees = () => {
         if (err) throw err;
         // Log all results of the SELECT statement.
         console.table(res);
-        //connection.end();
+
+        // Display the main menu.
+        console.log("\n");
+        displayMenu();
+    });
+};
+
+const viewEmployeesByManager = () => {
+    console.log('\nSelecting all employees grouped by manager...\n');
+    
+    // Build SQL SELECT statement to get all employees ordered by last_name, first_name.
+    const query = "SELECT (CONCAT(m.first_name,' ', m.last_name)) AS maanager, e.id As employee_id, e.first_name, e.last_name, title, d.name AS department FROM employee AS e INNER JOIN role AS r ON e.role_id = r.id INNER JOIN department AS d ON r.department_id = d.id LEFT JOIN employee AS m ON e.manager_id = m.id WHERE e.manager_id IS NOT null ORDER BY m.last_name, m.first_name, e.last_name, e.first_name";
+    
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        // Log all results of the SELECT statement.
+        console.table(res);
 
         // Display the main menu.
         console.log("\n");
@@ -621,8 +637,6 @@ const removeRole = () => {
 };
 
 const processUserSelection = (actionSelected) => {
-    console.log(actionSelected);
-
     switch (actionSelected) {
         case "View All Employees": viewAllEmployees();
             break;
@@ -655,10 +669,6 @@ const processUserSelection = (actionSelected) => {
             connection.end();
           break;
     };
-
-    // if (actionSelected != "Exit Application") {
-    //     displayMenu();
-    // };
 };
     
 // Display the menu and prompt user for menu selection.
