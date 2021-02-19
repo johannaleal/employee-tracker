@@ -28,7 +28,6 @@ The database schema is as pictured here:
 
 * [Installation](#installation)
 * [Usage](#usage)
-* [Screenshots](#screenshots)
 * [License](#license)
 * [Contributing](#contributing)
 * [Tests](#tests)
@@ -36,24 +35,19 @@ The database schema is as pictured here:
 
 ## Installation
 
-1. Install node.js. It can be downloaded here: [node.js Downloads](https://nodejs.org/en/download/)
-2. Install npm inquirer package by typing:
-    >npm init -y ; npm install inquirer
-3. Install npm mysql package: >npm insall mysql
-4. Install npm console.table package: >npm insall console.table --save
-5. Make sure that the following files exist in your application folder:
-
-```
-start.js
-.gitignore
-```
-
-6. The .gitignore file should contain the following lines:
-
-```
-node_modules/
-.DS_Store/
-```
+1. Clone this repo.
+2. Install node.js. It can be downloaded here: [node.js Downloads](https://nodejs.org/en/download/)
+3. Initialize npm:
+    >npm init
+4. Install npm inquirer package:
+    >npm install inquirer
+5. Install npm mysql package:
+    >npm insall mysql
+6. Install npm console.table package:
+    >npm insall console.table --save
+7. Install npm figlet:
+    >npm install figlet
+8. Run the SQL located in /db/employeeTrackerSeeds.sql in MySQL to create the databse and populate the tables.
 
 ## Usage
 
@@ -62,25 +56,21 @@ To run this app, open the console in the directory where the start.js file is an
 
 You will select from a menu list as follows:
 
-* View all employees
-* View all employees by department
-* View all employees by manager"
-* Add an employee
-* Remove an employee
-* Update employee role
-* Update employee manager
+* View All Employees
+* View All Employees by Manager
+* View All Departments
+* View All Roles
+* Add an Employee
+* Add a Department
+* Add a Role
+* Update Employee Role
+* Update Employee Manager
+* Remove an Employee
+* Remove a Department
+* Remove a Role
+* View Total Utilized Budget of a Department
 
-![Demo GIF](./images/ReadMeGeneratorWalkthrough.gif)
-
-## Screenshots
-
-### Menu Items
-
-![Menu Items](./images/enter-data.PNG)
-
-### View All Employees
-
-![View All Employees](./images/license-prompt.PNG)
+![Demo GIF](./assets/EmployeeTracker.gif)
 
 ## License
 
@@ -92,16 +82,12 @@ If you would like to contribute to this repository, please contact me via the em
 
 ## Tests
 
-To test, follow these instructions:
+To test this application:
 
-1. Type in terminal:
-    > node index.js
-2. Follow all the prompts and enter data.
-3. When the file has been successfully created you will get a success message.
-4. Go to your application directory and verify that the ReadMe file is there.
-5. Open it and verify that all the data you entered is there.
-
-_NOTE: FOR TESTING PURPOSES I NAMED THE OUTPUT FILE README_TEST.MD SO AS NOT TO OVERWRITE MY ACTUAL README FILE. YOU CAN CHANGE THIS IN THE writeUserInfo CONST IN THE INDEX.JS FILE (LINE 101)._
+1. Run the application in your terminal by typing:
+    > node start.js
+2. Go through each menu item and see that the results are as expected.
+3. After adding, updating, or deleting data, verify that your changes are reflected in the employeeTracker MySQL database.
 
 ## Questions
 

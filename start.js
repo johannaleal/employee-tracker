@@ -37,6 +37,7 @@ const confirmResponse = (input) => {
     return true;
 };
 
+// View all employees
 const viewAllEmployees = () => {
     console.log('\nSelecting all employees...\n');
     
@@ -54,10 +55,11 @@ const viewAllEmployees = () => {
     });
 };
 
+// View all employees ordered by manager name
 const viewEmployeesByManager = () => {
     console.log('\nSelecting all employees grouped by manager...\n');
     
-    // Build SQL SELECT statement to get all employees ordered by last_name, first_name.
+    // Build SQL SELECT statement to get all employees ordered by manager last_name and first_name.
     const query = "SELECT (CONCAT(m.first_name,' ', m.last_name)) AS maanager, e.id As employee_id, e.first_name, e.last_name, title, d.name AS department FROM employee AS e INNER JOIN role AS r ON e.role_id = r.id INNER JOIN department AS d ON r.department_id = d.id LEFT JOIN employee AS m ON e.manager_id = m.id WHERE e.manager_id IS NOT null ORDER BY m.last_name, m.first_name, e.last_name, e.first_name";
     
     connection.query(query, (err, res) => {
@@ -71,9 +73,12 @@ const viewEmployeesByManager = () => {
     });
 };
 
+// View the total utilized budget by selected department. This is the total salary of all/
+// employees for a department.
 const viewTotalUtilizedBudget = () => {
     console.log('\nGenerating your report...\n');
 
+    // Populate the list  in the inquirer prompt.
     let query = "SELECT id, name FROM department ORDER BY name";
   
     connection.query(query, (err, results) => {
@@ -81,7 +86,7 @@ const viewTotalUtilizedBudget = () => {
 
         let depts = [];
 
-        // Store each title in the array.
+        // Store each department name in the array.
         results.forEach(({name}) => {
             depts.push(name);
         });
@@ -99,12 +104,14 @@ const viewTotalUtilizedBudget = () => {
         .then((answer) => {
             let chosenDept;
 
+            // Identify the id of the department selected.
             results.forEach((department) => {
                 if (department.name === answer.department) {
                     chosenDept = department.id;
                 }
             });
 
+            // Run the query using the id of the department selected.
             query = "SELECT d.name AS department, CONCAT('$', FORMAT(SUM(salary), 2)) AS total_budget FROM employee e INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id WHERE d.id = " + chosenDept + " GROUP BY d.name ORDER BY d.name";
     
             connection.query(query, (err, res) => {
@@ -121,6 +128,7 @@ const viewTotalUtilizedBudget = () => {
     });
 };
 
+// Display all departments
 const viewAllDepartments = () => {
     console.log("\nSelecting all departments...\n");
   
@@ -139,10 +147,11 @@ const viewAllDepartments = () => {
     });
 };
 
+// Display all the roles
 const viewAllRoles = () => {
     console.log('\nSelecting all roles...\n');
   
-    // Build SQL SELECT statement to get all employees ordered by role name.
+    // Build SQL SELECT statement to get all roles ordered by title.
     const query = "SELECT r.id, title, FORMAT(salary, 0) AS salary, d.name AS department FROM role AS r INNER JOIN department AS d ON r.department_id = d.id order by title;";
   
     connection.query(query, (err, res) => {
@@ -157,6 +166,7 @@ const viewAllRoles = () => {
     });
 };
 
+// Add an employee
 const addEmployee = () => {
     // Get all the roles and store in an array to be used in 
     // the role inquirer list.
@@ -230,7 +240,6 @@ const addEmployee = () => {
                 chosenRole = role.id;
             }
         });
-        console.log(chosenRole);
 
         // Find the chosen manager object by matching first name and last name in order to get the id.
         // Only do this if one was chosen.
@@ -244,7 +253,7 @@ const addEmployee = () => {
             });
         };
 
-        // when finished prompting, insert a new item into the db with that info
+        // When finished prompting, insert a new item into the db with that info.
         connection.query(
             'INSERT INTO employee SET ?',
             {
@@ -265,6 +274,7 @@ const addEmployee = () => {
     });
 };
 
+// Add a new department.
 const addDepartment = () => {
     inquirer
         // Prompt for the department name.
@@ -295,6 +305,7 @@ const addDepartment = () => {
     });
 };
 
+// Add a new role.
 const addRole = () => {
     // Get all the departments and store in an array to be used in 
     // the department inquirer list.
@@ -312,7 +323,6 @@ const addRole = () => {
             departments.push(name);
         });
     });
-    console.log(departments.length);
 
     inquirer
         // Prompt for the role information.
@@ -340,13 +350,14 @@ const addRole = () => {
         // When finished prompting, insert a new item into the db with that info.
         let chosenDept;
 
+        // Find the department chosen in order to get the id.
         deptResults.forEach((department) => {
             if (department.name === answer.department) {
                 chosenDept = department;
             }
         });
-        console.log(chosenDept);
 
+        // Insert the department into the db.
         connection.query(
             'INSERT INTO role SET ?',
             {
@@ -366,6 +377,7 @@ const addRole = () => {
     });
 };
 
+// Update an employee's role.
 const updateEmployeeRole = () => {
      // Get all the roles and store in an array to be used in 
     // the role inquirer list.
@@ -385,7 +397,7 @@ const updateEmployeeRole = () => {
     });
 
     // Get all the employees and store in an array to be used in 
-    // the manager inquirer list.
+    // the employee inquirer list.
     query = "SELECT id, CONCAT(last_name, ', ', first_name) AS name FROM employee ORDER BY last_name, first_name";
     let employeeResults;
     let employees = [];
@@ -432,8 +444,7 @@ const updateEmployeeRole = () => {
             }
         });
 
-        // Find the chosen manager object by matching first name and last name in order to get the id.
-        // Only do this if one was chosen.
+        // Find the chosen employee object by matching first name and last name in order to get the id.
         let chosenEmployee = null;
 
         employeeResults.forEach((employee) => {
@@ -442,7 +453,7 @@ const updateEmployeeRole = () => {
             }
         });
 
-        // when finished prompting, insert a new item into the db with that info
+        // Update the record in the db with the info
         connection.query(
             'UPDATE employee SET ? WHERE ?',
             [
@@ -461,9 +472,10 @@ const updateEmployeeRole = () => {
     });
 };
 
+// Update an employee's manager.
 const updateEmployeeManager = () => {
     // Get all the employees and store in an array to be used in 
-   // the manager inquirer list.
+   // the employee and manager inquirer list.
    query = "SELECT id, CONCAT(last_name, ', ', first_name) AS name FROM employee ORDER BY last_name, first_name";
  
    connection.query(query, (err, results) => {
@@ -477,13 +489,8 @@ const updateEmployeeManager = () => {
         });
 
         inquirer
-            // Prompt for employee information. Validate for required fields.
+            // Prompt for employee and manager.
             .prompt([
-            // {
-            //     name: "verify",
-            //     type: "input",
-            //     message: "Press ENTER to continue.",
-            // },
             {
                 name: "employee",
                 type: "list",
@@ -498,8 +505,7 @@ const updateEmployeeManager = () => {
             },
         ])
         .then((answer) => {
-            // Find the chosen manager object by matching first name and last name in order to get the id.
-            // Only do this if one was chosen.
+            // Find the chosen manager and employee objects by matching first name and last name in order to get the id.
             let chosenEmployee;
 
             results.forEach((employee) => {
@@ -516,7 +522,7 @@ const updateEmployeeManager = () => {
                 }
             });
 
-            // when finished prompting, insert a new item into the db with that info
+            // Update the record in the db with the info
             connection.query(
                 'UPDATE employee SET ? WHERE ?',
                 [
@@ -536,7 +542,9 @@ const updateEmployeeManager = () => {
     });
 };
 
+// Remove an employee
 const removeEmployee = () => {
+    // Get all the employees to populate the inquirer employee list prompt.
     let query = "SELECT id, CONCAT(last_name, ', ', first_name) AS name FROM employee ORDER BY last_name, first_name";
   
     connection.query(query, (err, results) => {
@@ -544,7 +552,7 @@ const removeEmployee = () => {
 
         let employees = [];
 
-        // Store each title in the array.
+        // Store each name in the array.
         results.forEach(({name}) => {
             employees.push(name);
         });
@@ -562,12 +570,14 @@ const removeEmployee = () => {
         .then((answer) => {
             let chosenEmployee;
 
+            // Locate the chosen employee object
             results.forEach((employee) => {
                 if (employee.name === answer.employee) {
                     chosenEmployee = employee.id;
                 }
             });
 
+            // Delete the chosen employee with the id.
             connection.query(
                 'DELETE FROM employee WHERE ?',
                 {
@@ -586,7 +596,9 @@ const removeEmployee = () => {
     });
 };
 
+// Remove a department.
 const removeDepartment = () => {
+    // Get all the departments in order to populate the inquirer department list prompt.
     let query = "SELECT id, name FROM department ORDER BY name";
   
     connection.query(query, (err, results) => {
@@ -594,7 +606,7 @@ const removeDepartment = () => {
 
         let depts = [];
 
-        // Store each title in the array.
+        // Store each department name in the array.
         results.forEach(({name}) => {
             depts.push(name);
         });
@@ -612,12 +624,14 @@ const removeDepartment = () => {
         .then((answer) => {
             let chosenDept;
 
+            // Locate the department object selected.
             results.forEach((department) => {
                 if (department.name === answer.department) {
                     chosenDept = department.id;
                 }
             });
 
+            // Delete the department using the id of selected department.
             connection.query(
                 'DELETE FROM department WHERE ?',
                 {
@@ -636,7 +650,9 @@ const removeDepartment = () => {
     });
 };
 
+// Remove a roll.
 const removeRole = () => {
+    // Select all the roles in order to populate the inquirer role list prompt.
     let query = "SELECT id, title FROM role ORDER BY title";
   
     connection.query(query, (err, results) => {
@@ -662,12 +678,14 @@ const removeRole = () => {
         .then((answer) => {
             let chosenRole;
 
+            // Locate the role object selected.
             results.forEach((role) => {
                 if (role.title === answer.title) {
                     chosenRole = role.id;
                 }
             });
 
+            // Use the selected role object's id to delete it from the db.
             connection.query(
                 'DELETE FROM role WHERE ?',
                 {
@@ -686,6 +704,7 @@ const removeRole = () => {
     });
 };
 
+// Process the user selection from the menu.
 const processUserSelection = (actionSelected) => {
     switch (actionSelected) {
         case "View All Employees": viewAllEmployees();
@@ -750,4 +769,5 @@ const run = () => {
     });
 };
 
+// Run the app.
 run();
