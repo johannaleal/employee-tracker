@@ -409,51 +409,53 @@ const updateEmployeeRole = () => {
 
 const removeDepartment = () => {
     let query = "SELECT id, name FROM department ORDER BY name";
-    let deptResults;
-    let depts = [];
   
     connection.query(query, (err, results) => {
         if (err) throw err;
+
+        let deptResults;
+        let depts = [];
 
         // Store each title in the array.
         results.forEach(({name}) => {
             depts.push(name);
         });
-    });
+    
 
-    inquirer
-        // Prompt for the department name.
-        .prompt([
-        {
-            name: "department",
-            type: "list",
-            choices: depts,
-            message: "Which department do you want to delete?",
-        },
-    ])
-    .then((answer) => {
-        let chosenDept;
-
-        results.forEach((department) => {
-            if (department.name === answer.department) {
-                chosenDept = department.id;
-            }
-        });
-
-        connection.query(
-            'DELETE FROM department WHERE ?',
+        inquirer
+            // Prompt for the department name.
+            .prompt([
             {
-                id: chosenDept,
+                name: "department",
+                type: "list",
+                choices: depts,
+                message: "Which department do you want to delete?",
             },
-            (err) => {
-                if (err) throw err;
+        ])
+        .then((answer) => {
+            let chosenDept;
 
-                console.log('\nThe department was removed successfully!\n');
-                
-                 // Display the main menu.
-                displayMenu();
-            }
-        );
+            results.forEach((department) => {
+                if (department.name === answer.department) {
+                    chosenDept = department.id;
+                }
+            });
+
+            connection.query(
+                'DELETE FROM department WHERE ?',
+                {
+                    id: chosenDept,
+                },
+                (err) => {
+                    if (err) throw err;
+
+                    console.log('\nThe department was removed successfully!\n');
+                    
+                    // Display the main menu.
+                    displayMenu();
+                }
+            );
+        });
     });
 };
 
