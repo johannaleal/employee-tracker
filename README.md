@@ -4,7 +4,25 @@
 
 ## Description
 
-In this project, I have created a command-line application
+In this project, I have created a command-line application for managing a company's employees using node, inquirer, and MySQL. The application has the following functionality:
+
+1. View All Employees
+2. View All Employees by Manager
+3. View All Departments
+4. View All Roles
+5. Add an Employee
+6. Add a Department
+7. Add a Role
+8. Update Employee Role
+9. Update Employee Manager
+10. Remove an Employee
+11. Remove a Department
+12. Remove a Role
+13. View Total Utilized Budget of a Department
+
+The database schema is as pictured here:
+
+![Database Schema](./assets/schema.png)
 
 ## Table of Contents
 
