@@ -47,14 +47,14 @@ The database schema is as pictured here:
     >npm insall console.table --save
 7. Install npm figlet:
     >npm install figlet
-8. Run the SQL located in /db/employeeTrackerSeeds.sql in MySQL to create the databse and populate the tables.
+8. Run the SQL located in /db/employeeTrackerSeeds.sql in MySQL to create the database and populate the tables.
 
 ## Usage
 
-To run this app, open the console in the directory where the start.js file is and run the following command:
+To run this app, open the console in the directory where the start.js file is located and run the following command:
 >node start
 
-You will select from a menu list as follows:
+A banner will display followed by a menu where you can select from the following items:
 
 * View All Employees
 * View All Employees by Manager
