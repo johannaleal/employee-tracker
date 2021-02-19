@@ -29,16 +29,6 @@ const menu = [
       }
 ];
 
-function getRoles() {
-    const query = "SELECT * FROM roles ORDER BY title ASC";
-    
-    connection.query(query, (err, res) => {
-        if (err) throw err;
-        
-        return res;
-    });
-}
-
 // Validate required input.
 const confirmResponse = (input) => {
     if (input === "") {
@@ -188,7 +178,6 @@ const addEmployee = () => {
             });
         };
 
-        console.log(chosenMgr);
         // when finished prompting, insert a new item into the db with that info
         connection.query(
             'INSERT INTO employee SET ?',
@@ -407,6 +396,56 @@ const updateEmployeeRole = () => {
 
 };
 
+const removeEmployee = () => {
+    let query = "SELECT id, CONCAT(last_name, ', ', first_name) AS name FROM employee ORDER BY last_name, first_name";
+  
+    connection.query(query, (err, results) => {
+        if (err) throw err;
+
+        let employees = [];
+
+        // Store each title in the array.
+        results.forEach(({name}) => {
+            employees.push(name);
+        });
+    
+        inquirer
+            // Prompt for the employee name.
+            .prompt([
+            {
+                name: "employee",
+                type: "list",
+                choices: employees,
+                message: "Which employee do you want to delete?",
+            },
+        ])
+        .then((answer) => {
+            let chosenEmployee;
+
+            results.forEach((employee) => {
+                if (employee.name === answer.employee) {
+                    chosenEmployee = employee.id;
+                }
+            });
+
+            connection.query(
+                'DELETE FROM employee WHERE ?',
+                {
+                    id: chosenEmployee,
+                },
+                (err) => {
+                    if (err) throw err;
+
+                    console.log('\nThe employee was removed successfully!\n');
+                    
+                    // Display the main menu.
+                    displayMenu();
+                }
+            );
+        });
+    });
+};
+
 const removeDepartment = () => {
     let query = "SELECT id, name FROM department ORDER BY name";
   
@@ -420,7 +459,6 @@ const removeDepartment = () => {
             depts.push(name);
         });
     
-
         inquirer
             // Prompt for the department name.
             .prompt([
@@ -530,7 +568,7 @@ const processUserSelection = (actionSelected) => {
             break;
         case "Update Employee Manager":
             break;
-        case "Remove an Employee":
+        case "Remove an Employee": removeEmployee();
             break;
         case "Remove a Department": removeDepartment();
             break;
