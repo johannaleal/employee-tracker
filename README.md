@@ -1,70 +1,98 @@
-# Getting Started with Create React App
+# Employee Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+In this project, I have created a command-line application for managing a company's employees using node, inquirer, and MySQL. The application has the following functionality:
 
-### `npm start`
+1. View All Employees
+2. View All Employees by Manager
+3. View All Departments
+4. View All Roles
+5. Add an Employee
+6. Add a Department
+7. Add a Role
+8. Update Employee Role
+9. Update Employee Manager
+10. Remove an Employee
+11. Remove a Department
+12. Remove a Role
+13. View Total Utilized Budget of a Department
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The database schema is as pictured here:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+![Database Schema](./assets/schema.png)
 
-### `npm test`
+## Table of Contents
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* [Installation](#installation)
+* [Usage](#usage)
+* [License](#license)
+* [Contributing](#contributing)
+* [Tests](#tests)
+* [Questions](#questions)
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone this repo.
+2. Install node.js. It can be downloaded here: [node.js Downloads](https://nodejs.org/en/download/)
+3. Initialize npm:
+    >npm init
+4. Install npm inquirer package:
+    >npm install inquirer
+5. Install npm mysql package:
+    >npm insall mysql
+6. Install npm console.table package:
+    >npm insall console.table --save
+7. Install npm figlet:
+    >npm install figlet
+8. Run the SQL located in /db/employeeTrackerSeeds.sql in MySQL to create the database and populate the tables.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To run this app, open the console in the directory where the start.js file is located and run the following command:
+>node start
 
-### `npm run eject`
+A banner will display followed by a menu where you can select from the following items:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+* View All Employees
+* View All Employees by Manager
+* View All Departments
+* View All Roles
+* Add an Employee
+* Add a Department
+* Add a Role
+* Update Employee Role
+* Update Employee Manager
+* Remove an Employee
+* Remove a Department
+* Remove a Role
+* View Total Utilized Budget of a Department
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![Demo GIF](./assets/EmployeeTracker.gif)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## License
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+This application is covered under license: MIT License.
 
-## Learn More
+## Contributing
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+If you would like to contribute to this repository, please contact me via the email below to discuss the changes you wish to make.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Tests
 
-### Code Splitting
+To test this application:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Run the application in your terminal by typing:
+    > node start.js
+2. Go through each menu item and see that the results are as expected.
+3. After adding, updating, or deleting data, verify that your changes are reflected in the employeeTracker MySQL database.
 
-### Analyzing the Bundle Size
+## Questions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Contact Information
 
-### Making a Progressive Web App
+GitHub Profile: [@johannaleal](http://github.com/johannaleal)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Email: <johannarleal@gmail.com>
